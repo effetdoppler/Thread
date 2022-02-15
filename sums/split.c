@@ -1,4 +1,8 @@
 // TODO: Insert the 'include' directives.
+#include <err.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define INITIALIZE_ARRAY
 
@@ -16,7 +20,12 @@ struct thread_data
 // 'size' is the number of elements of the array.
 unsigned long linear_sum(unsigned char *start, long size)
 {
-    // TODO
+    long sum = 0;
+    for(long i = 0; i < size; i++)
+    {
+        sum += start[i];
+    }
+    return sum;
 }
 
 // Define the thread function.
