@@ -39,7 +39,8 @@ void * worker(void *arg)
     struct thread_data thread = (struct thread_data)arg;
     long sum = linear_sum(thread->start, thread->size);
     thread->sum = sum;
-    printf("Thread %ld: %ld", thread->id, thread->sum)
+    printf("Thread %ld: %ld", thread->id, thread->sum);
+    return NULL;
 
 }
 
@@ -80,16 +81,40 @@ int main(int argc, char **argv)
     printf("OK\n");
 #endif
 
-    // TODO
+    // Return from the function.
     // - Determine the size of a chunk.
     //   Be careful, the size of the last chunk may include some remaining bytes.
-    // - For each chunk:
-    //     - Set the thread_data structure of the thread.
-    //       This structure is stored in the 'data' array.
-    //       (The thread ID should be used as index.)
-    //     - Execute the thread.
+    long default_size = array_size/thread_number;
+    long size = default_size;
+    long last_chunk;
+    if (array_size%thread_number != 0)
+        last_chunk = array_size = array_size/thread_number;
+    else
+        last_chunk = default_size;
+    for(long i = 0; i < thread_number; i++)
+    {
+        // - For each chunk:
+        //     - Set the thread_data structure of the thread.
+        //       This structure is stored in the 'data' array.
+        //       (The thread ID should be used as index.)
+        //     - Execute the thread.
+        pthread_t thr;
+        if (i == thread_number)
+            data[i]->start = last_chunk;
+        else
+            data[i]->start = size;
+        data[i]->id = i; 
+        bytes[i] = data[i];
+        data[i]->sys_id = pthread_self();
+        pthread_create(&thr, NULL, worker, data[i])
+    }
     // Wait for the threads and add up their sums.
+    for (long i = 0; i < nb; i++)
+        pthread_join(data[i]->sys_id, NULL);
     // Print the sum of the array.
+    printf("%ld", linear_sum(bytes, thread_number));
     // Free the array.
-    // Return from the function.
+    free(bytes);
+    return 0;
+    
 }
