@@ -1,4 +1,3 @@
-// TODO: Insert the 'include' directives.
 #include <err.h>
 #include <pthread.h>
 #include <stdio.h>
@@ -37,6 +36,11 @@ void * worker(void *arg)
     // - Store the result in the 'sum' field.
     // - Print the thread ID and the result.
     // - Return from the function.
+    struct thread_data thread = (struct thread_data)arg;
+    long sum = linear_sum(thread->start, thread->size);
+    thread->sum = sum;
+    printf("Thread %ld: %ld", thread->id, thread->sum)
+
 }
 
 int main(int argc, char **argv)
