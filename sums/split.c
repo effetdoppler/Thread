@@ -106,7 +106,7 @@ int main(int argc, char **argv)
         data[i]->id = i; 
         bytes[i] = data[i];
         data[i]->sys_id = pthread_self();
-        pthread_create(&thr, NULL, worker, data[i])
+        pthread_create(&thr, NULL, worker, (void*)data[i]);
     }
     // Wait for the threads and add up their sums.
     for (long i = 0; i < nb; i++)
