@@ -21,7 +21,7 @@ struct thread_data
 // 'size' is the number of elements of the array.
 unsigned long linear_sum(unsigned char *start, long size)
 {
-    long sum = 0;
+    unsigned long sum = 0;
     for(long i = 0; i < size; i++)
     {
         sum += start[i];
@@ -65,10 +65,9 @@ void * worker(void *arg)
     // - Get the thread data passed as parameters.
     struct thread_data *data = (struct thread_data*)arg;
     // - Call dnc_sum().
-    unsigned long sum = dnc_sum(data->start, data->size, data->threshold);
     //   (It may execute recursively another thread.)
     // - Store the result in the 'sum' field.
-    data->sum = sum;
+    data->sum = dnc_sum(data->start, data->size, data->threshold);;
     // - Return from the function.
     return NULL;
 }

@@ -2,6 +2,9 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <errno.h>
+#include <err.h>
+
 
 
 void* fn_thread(void* arg);
@@ -59,5 +62,5 @@ void* fn_thread(void* arg)
     long i = (long)arg;
     sleep(rand() % 3);
     printf("Hello from thread %ld!\n", i);
-    return;
+    return NULL;
 }

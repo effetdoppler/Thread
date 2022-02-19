@@ -19,7 +19,7 @@ struct thread_data
 // 'size' is the number of elements of the array.
 unsigned long linear_sum(unsigned char *start, long size)
 {
-    long sum = 0;
+    unsigned long sum = 0;
     for(long i = 0; i < size; i++)
         sum += start[i];
     return sum;

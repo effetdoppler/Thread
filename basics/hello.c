@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
+#include <err.h>
 #include <pthread.h>
 
 void* fn_thread(void* arg);
@@ -25,7 +27,7 @@ int main(int argc, char** argv)
     pthread_t thr[nb];
     for (long i = 0; i < nb; i++)
     {
-        e = pthread_create(&thr+i, NULL, fn_thread, NULL);
+        e = pthread_create(&thr[i], NULL, fn_thread, NULL);
         //   If an error occurs, exit with an error message.
         //   You can use err(3), but the 'errno' variable is not set automatically.
         //   You have to set it manually to the return value of pthread_create().
@@ -55,5 +57,5 @@ void* fn_thread(void* arg __attribute__((unused)))
     // - Print a message.
     // - Return from the function.
     printf("Hello from thread!\n");
-    return;
+    return NULL;
 }
