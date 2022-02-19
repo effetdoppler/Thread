@@ -40,6 +40,8 @@ int main(int argc, char** argv)
     // - Finally, there are two possibilities to terminate the main thread :
     //   1. Wait for all the other threads to end.
     //      Return from the function (terminate the process).
+    for (long i = 0; i < nb; i++)
+        pthread_join(thr[i], NULL);
     return EXIT_SUCCESS;
     
     //   2. Do not wait for the other threads.
