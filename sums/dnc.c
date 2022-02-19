@@ -41,10 +41,10 @@ unsigned long dnc_sum(unsigned char *start, long size, long threshold)
     data.start = start;
     data.threshold = threshold;
     
-    long size2 = size - size1;
     unsigned char* mid = start + size1;
     pthread_t thr;
     pthread_create(&thr, NULL, worker, (void*)&data);  // Use a thread.
+    long size2 = size - size1;
     unsigned long s2 = dnc_sum(mid, size2, threshold);
 
     // Wait for s1.
