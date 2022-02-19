@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdatomic.h>
 
-//#define INITIALIZE_ARRAY
+#define INITIALIZE_ARRAY
 
 void * worker(void *arg);
 
@@ -24,7 +24,7 @@ unsigned long linear_sum(unsigned char *start, long size)
     long sum = 0;
     for(long i = 0; i < size; i++)
     {
-        sum += *(start+i);
+        sum += start[i];
     }
     return sum;
 }
