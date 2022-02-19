@@ -87,7 +87,7 @@ int main(int argc, char **argv)
     long size = default_size;
     long last_chunk;
     if (array_size%thread_number != 0)
-        last_chunk = array_size - array_size/thread_number*(thread_number-1);
+        last_chunk = array_size - default_size * (thread_number-1);
     else
         last_chunk = default_size;
     for(long i = 0; i < thread_number; i++)
