@@ -1,4 +1,8 @@
-// TODO: Insert the 'include' directives.
+#include <err.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdatomic.h>
 
 #define INITIALIZE_ARRAY
 
@@ -17,13 +21,37 @@ struct thread_data
 // 'size' is the number of elements of the array.
 unsigned long linear_sum(unsigned char *start, long size)
 {
-    // TODO: same function as previously.
+    long sum = 0;
+    for(long i = 0; i < size; i++)
+    {
+        sum += *(start+i);
+    }
+    return sum;
 }
 
 unsigned long dnc_sum(unsigned char *start, long size, long threshold)
 {
     // TODO
     // Implement the divide-and-conquer algorithm.
+    if (size <= threshold)
+        return linear_sum(start, size);
+
+    long size1 = size / 2;
+    struct thread_data thread;
+    thread.size = size1;
+    thread.start = start;
+    thread.threshold = threshold;
+    
+    long size2 = size - size1;
+    unsigned char* mid = start + size1;
+    pthread_t thr;
+    pthread_create(&thr, NULL, worker, (void*)&thread);  // Use a thread.
+    unsigned long s2 = dnc_sum(mid, size2, threshold);
+
+    // Wait for s1.
+    pthread_join(thr, NULL);
+
+    return thread.sum + s2;
 }
 
 // Counter of threads.
@@ -37,10 +65,14 @@ void * worker(void *arg)
 
     // TODO
     // - Get the thread data passed as parameters.
+    struct thread_data *thread = (struct thread_data*)arg;
     // - Call dnc_sum().
+    unsigned long sum = dnc_sum(thread->start, thread->size, thread->threshold);
     //   (It may execute recursively another thread.)
     // - Store the result in the 'sum' field.
+    thread->sum = sum;
     // - Return from the function.
+    return NULL;
 }
 
 int main(int argc, char **argv)
