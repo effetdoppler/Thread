@@ -73,11 +73,7 @@ int main(int argc, char **argv)
     printf("Initializing array........");
     fflush(stdout);
     for (long i = 0; i < array_size; i++)
-    {
-        //bytes[i] = i%2;
-        //printf("%d", bytes[i]);
         bytes[i] = 1;
-    }
     printf("OK\n");
 #endif
 
