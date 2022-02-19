@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdatomic.h>
 
-#define INITIALIZE_ARRAY
+//#define INITIALIZE_ARRAY
 
 void * worker(void *arg);
 
