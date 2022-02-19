@@ -22,7 +22,7 @@ unsigned long linear_sum(unsigned char *start, long size)
     long sum = 0;
     for(long i = 0; i < size; i++)
     {
-        sum += start[i];
+        sum += *(start+i);
     }
     return sum;
 }
@@ -36,10 +36,10 @@ void * worker(void *arg)
     // - Store the result in the 'sum' field.
     // - Print the thread ID and the result.
     // - Return from the function.
-    struct thread_data thread = (struct thread_data)arg;
+    struct thread_data *thread = (struct thread_data*)arg;
     long sum = linear_sum(thread->start, thread->size);
     thread->sum = sum;
-    printf("Thread %ld: %ld", thread->id, thread->sum);
+    printf("Thread %ld: %ld\n", thread->id, thread->sum);
     return NULL;
 
 }
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 
     long array_size = atol(argv[1]);
     if (array_size <= 63)
-        errx(EXIT_FAILURE, "The size of the array is not valid (must be greater than 63).");
+       errx(EXIT_FAILURE, "The size of the array is not valid (must be greater than 63).");
 
     long thread_number = atol(argv[2]);
     if (thread_number < 1 || thread_number > 16)
@@ -77,18 +77,25 @@ int main(int argc, char **argv)
     printf("Initializing array........");
     fflush(stdout);
     for (long i = 0; i < array_size; i++)
+    {
+        //bytes[i] = i%2;
+        //printf("%d", bytes[i]);
         bytes[i] = 1;
+    }
     printf("OK\n");
 #endif
 
     // Return from the function.
     // - Determine the size of a chunk.
     //   Be careful, the size of the last chunk may include some remaining bytes.
+    
+    pthread_t thr[thread_number];
+    long point = 0;
     long default_size = array_size/thread_number;
     long size = default_size;
     long last_chunk;
     if (array_size%thread_number != 0)
-        last_chunk = array_size = array_size/thread_number;
+        last_chunk = array_size - array_size/thread_number*(thread_number-1);
     else
         last_chunk = default_size;
     for(long i = 0; i < thread_number; i++)
@@ -98,21 +105,24 @@ int main(int argc, char **argv)
         //       This structure is stored in the 'data' array.
         //       (The thread ID should be used as index.)
         //     - Execute the thread.
-        pthread_t thr;
-        if (i == thread_number)
-            data[i]->start = last_chunk;
+        if (i == thread_number-1)
+            data[i].size = last_chunk;
         else
-            data[i]->start = size;
-        data[i]->id = i; 
-        bytes[i] = data[i];
-        data[i]->sys_id = pthread_self();
-        pthread_create(&thr, NULL, worker, (void*)data[i]);
+            data[i].size = size;
+        data[i].id = i; 
+        data[i].sys_id = pthread_self();
+        data[i].start = bytes+point;
+        point += data[i].size;
+        pthread_create(&thr[i], NULL, worker, (void*)&data[i]);
     }
     // Wait for the threads and add up their sums.
-    for (long i = 0; i < nb; i++)
-        pthread_join(data[i]->sys_id, NULL);
+    for (long i = 0; i < thread_number; i++)
+        pthread_join(thr[i], NULL);
     // Print the sum of the array.
-    printf("%ld", linear_sum(bytes, thread_number));
+    long sum = 0;
+    for (long i = 0; i < thread_number; i++)
+        sum += data[i].sum;
+    printf("Sum......: %ld\n", sum);
     // Free the array.
     free(bytes);
     return 0;
