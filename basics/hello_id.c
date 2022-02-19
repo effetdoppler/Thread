@@ -33,7 +33,7 @@ int main(int argc, char** argv)
         if (e!=0)
         {
             errno = e;
-            err(EXIT_FAILURE, "pthread_create(): %s", strerror(errno));
+            err(EXIT_FAILURE, "pthread_create()");
         }
 
     }
