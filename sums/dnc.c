@@ -62,7 +62,6 @@ void * worker(void *arg)
     // Increment the counter of threads.
     atomic_fetch_add(&thread_count, 1);
 
-    // TODO
     // - Get the thread data passed as parameters.
     struct thread_data *data = (struct thread_data*)arg;
     // - Call dnc_sum().
