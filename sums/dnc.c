@@ -36,21 +36,21 @@ unsigned long dnc_sum(unsigned char *start, long size, long threshold)
         return linear_sum(start, size);
 
     long size1 = size / 2;
-    struct thread_data thread;
-    thread.size = size1;
-    thread.start = start;
-    thread.threshold = threshold;
+    struct thread_data data;
+    data.size = size1;
+    data.start = start;
+    data.threshold = threshold;
     
     long size2 = size - size1;
     unsigned char* mid = start + size1;
     pthread_t thr;
-    pthread_create(&thr, NULL, worker, (void*)&thread);  // Use a thread.
+    pthread_create(&thr, NULL, worker, (void*)&data);  // Use a thread.
     unsigned long s2 = dnc_sum(mid, size2, threshold);
 
     // Wait for s1.
     pthread_join(thr, NULL);
 
-    return thread.sum + s2;
+    return data.sum + s2;
 }
 
 // Counter of threads.
@@ -64,12 +64,12 @@ void * worker(void *arg)
 
     // TODO
     // - Get the thread data passed as parameters.
-    struct thread_data *thread = (struct thread_data*)arg;
+    struct thread_data *data = (struct thread_data*)arg;
     // - Call dnc_sum().
-    unsigned long sum = dnc_sum(thread->start, thread->size, thread->threshold);
+    unsigned long sum = dnc_sum(data->start, data->size, data->threshold);
     //   (It may execute recursively another thread.)
     // - Store the result in the 'sum' field.
-    thread->sum = sum;
+    data->sum = sum;
     // - Return from the function.
     return NULL;
 }
