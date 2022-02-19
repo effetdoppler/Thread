@@ -21,7 +21,7 @@ unsigned long linear_sum(unsigned char *start, long size)
 {
     long sum = 0;
     for(long i = 0; i < size; i++)
-        sum += *(start[i]);
+        sum += start[i];
     return sum;
 }
 
@@ -34,8 +34,7 @@ void * worker(void *arg)
     // - Print the thread ID and the result.
     // - Return from the function.
     struct thread_data *thread = (struct thread_data*)arg;
-    long sum = linear_sum(thread->start, thread->size);
-    thread->sum = sum;
+    thread->sum = linear_sum(thread->start, thread->size);;
     printf("Thread %ld: %ld\n", thread->id, thread->sum);
     return NULL;
 
