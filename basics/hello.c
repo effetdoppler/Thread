@@ -30,7 +30,10 @@ int main(int argc, char** argv)
         //   You can use err(3), but the 'errno' variable is not set automatically.
         //   You have to set it manually to the return value of pthread_create().
         if (e!=0)
-            errx(EXIT_FAILURE, "fn_thread()");
+        {
+            errno = e;
+            err(EXIT_FAILURE, "pthread_create(): %s");
+        }
     }
     
    
