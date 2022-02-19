@@ -31,7 +31,6 @@ unsigned long linear_sum(unsigned char *start, long size)
 
 unsigned long dnc_sum(unsigned char *start, long size, long threshold)
 {
-    // TODO
     // Implement the divide-and-conquer algorithm.
     if (size <= threshold)
         return linear_sum(start, size);
