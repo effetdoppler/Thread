@@ -28,7 +28,6 @@ unsigned long linear_sum(unsigned char *start, long size)
 // Define the thread function.
 void * worker(void *arg)
 {
-    // TODO
     // - Get the thread data passed as parameters.
     // - Call linear_sum().
     // - Store the result in the 'sum' field.
